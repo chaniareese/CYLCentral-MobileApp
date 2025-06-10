@@ -4,9 +4,10 @@ import '/data/models/program_model.dart';
 
 class ProgramDetailScreen extends StatelessWidget {
   final Program program;
-  
-  const ProgramDetailScreen({Key? key, required this.program}) : super(key: key);
-  
+
+  const ProgramDetailScreen({Key? key, required this.program})
+    : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,13 +32,13 @@ class ProgramDetailScreen extends StatelessWidget {
                 children: [
                   // Header Image
                   program.programHeaderPhoto != null
-                    ? Image.network(
+                      ? Image.network(
                         program.programHeaderPhoto!,
                         fit: BoxFit.cover,
                       )
-                    : Container(
+                      : Container(
                         decoration: const BoxDecoration(
-                          gradient: kGreenGradient,
+                          gradient: kGreenGradient1,
                         ),
                       ),
                   // Gradient overlay for better text visibility
@@ -46,10 +47,7 @@ class ProgramDetailScreen extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black54,
-                        ],
+                        colors: [Colors.transparent, Colors.black54],
                       ),
                     ),
                   ),
@@ -57,7 +55,7 @@ class ProgramDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Program Content
           SliverToBoxAdapter(
             child: Column(
@@ -86,28 +84,31 @@ class ProgramDetailScreen extends StatelessWidget {
                           ],
                         ),
                         child: ClipOval(
-                          child: program.logo != null
-                            ? Image.network(
-                                program.logo!,
-                                fit: BoxFit.cover,
-                              )
-                            : Center(
-                                child: Text(
-                                  program.name.length > 1
-                                    ? program.name.substring(0, 2).toUpperCase()
-                                    : program.name,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: kGreen1,
+                          child:
+                              program.logo != null
+                                  ? Image.network(
+                                    program.logo!,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Center(
+                                    child: Text(
+                                      program.name.length > 1
+                                          ? program.name
+                                              .substring(0, 2)
+                                              .toUpperCase()
+                                          : program.name,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: kGreen1,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                         ),
                       ),
-                      
+
                       const SizedBox(width: 16),
-                      
+
                       // Program Name and Type
                       Expanded(
                         child: Column(
@@ -134,7 +135,11 @@ class ProgramDetailScreen extends StatelessWidget {
                             if (program.directorName != null)
                               Row(
                                 children: [
-                                  Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                                  Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: Colors.grey[600],
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     "Director: ${program.directorName}",
@@ -151,11 +156,14 @@ class ProgramDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Stats Card (Total Events and Average Rating)
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
+                  ),
                   decoration: BoxDecoration(
                     color: kMint.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(12),
@@ -191,7 +199,7 @@ class ProgramDetailScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                       // Average Rating (Hardcoded for now)
                       Row(
                         children: [
@@ -223,7 +231,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Program Status and Dates
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -231,29 +239,37 @@ class ProgramDetailScreen extends StatelessWidget {
                     children: [
                       // Status Tag
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: program.programStatus.toLowerCase() == 'active' || 
-                                 program.programStatus.toLowerCase() == 'on-going'
-                              ? Colors.green.withOpacity(0.2)
-                              : Colors.orange.withOpacity(0.2),
+                          color:
+                              program.programStatus.toLowerCase() == 'active' ||
+                                      program.programStatus.toLowerCase() ==
+                                          'on-going'
+                                  ? Colors.green.withOpacity(0.2)
+                                  : Colors.orange.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           program.programStatus,
                           style: TextStyle(
                             fontSize: 12,
-                            color: program.programStatus.toLowerCase() == 'active' || 
-                                  program.programStatus.toLowerCase() == 'on-going'
-                                ? Colors.green[800]
-                                : Colors.orange[800],
+                            color:
+                                program.programStatus.toLowerCase() ==
+                                            'active' ||
+                                        program.programStatus.toLowerCase() ==
+                                            'on-going'
+                                    ? Colors.green[800]
+                                    : Colors.orange[800],
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(width: 12),
-                      
+
                       // Establishment Date
                       if (program.establishmentDate.isNotEmpty)
                         Text(
@@ -266,7 +282,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Description Header
                 const Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
@@ -279,7 +295,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Description Content
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -292,7 +308,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Upcoming Events Header
                 const Padding(
                   padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
@@ -305,7 +321,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Placeholder for Events (Coming Soon)
                 Container(
                   margin: const EdgeInsets.all(16.0),
@@ -343,7 +359,7 @@ class ProgramDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Bottom spacing
                 const SizedBox(height: 24),
               ],

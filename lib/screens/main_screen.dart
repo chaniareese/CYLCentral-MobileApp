@@ -9,7 +9,7 @@ import '../data/models/user_model.dart';
 
 class MainScreen extends StatefulWidget {
   final User user;
-  
+
   const MainScreen({super.key, required this.user});
 
   @override
@@ -25,8 +25,12 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _screens = [
       HomeScreen(user: widget.user),
-      _buildPlaceholderScreen('Explore'),  // Replace with actual screen when available
-      _buildPlaceholderScreen('My Events'),  // Replace with actual screen when available
+      _buildPlaceholderScreen(
+        'Explore',
+      ), // Replace with actual screen when available
+      _buildPlaceholderScreen(
+        'My Events',
+      ), // Replace with actual screen when available
       ProfileScreen(user: widget.user),
     ];
   }
@@ -45,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: kGreenGradient),
+          decoration: const BoxDecoration(gradient: kGreenGradient1),
         ),
         elevation: 0,
       ),

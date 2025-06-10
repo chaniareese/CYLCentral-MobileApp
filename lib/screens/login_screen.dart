@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  
   // Login function
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -87,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                       ),
-                      gradient: kGreenGradient,
+                      gradient: kGreenGradient1,
                     ),
                     const SizedBox(height: 4),
                     const Text(
@@ -171,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 40,
                   width: 300,
                   decoration: BoxDecoration(
-                    gradient: kGreenGradient,
+                    gradient: kGreenGradient1,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ElevatedButton(
@@ -203,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                   ),
                 ),
-
 
                 const SizedBox(height: 6),
                 // Forgot password
@@ -242,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.w600,
                           decoration: TextDecoration.underline,
                         ),
-                        gradient: kGreenGradient,
+                        gradient: kGreenGradient1,
                       ),
                     ),
                   ],

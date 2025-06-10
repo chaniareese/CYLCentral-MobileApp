@@ -23,20 +23,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _birthdateController = TextEditingController();
   final _employmentStatusController = TextEditingController();
   final _companyController = TextEditingController();
-  
+
   String? _region;
   String? _province;
   String? _errorMessage;
   bool _isLoading = false;
   DateTime? _selectedDate;
-  
+
   // Employment status options
   final List<String> _employmentStatusOptions = [
     'Employed',
     'Self-employed',
     'Unemployed',
     'Student',
-    'Retired'
+    'Retired',
   ];
 
   // Region options
@@ -57,15 +57,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'Region XI',
     'Region XII',
     'Region XIII',
-    'BARMM'
+    'BARMM',
   ];
 
   // Provinces by region
   final Map<String, List<String>> _provincesByRegion = {
     'NCR': ['Manila', 'Quezon City', 'Makati', 'Pasig', 'Taguig'],
-    'CAR': ['Abra', 'Apayao', 'Benguet', 'Ifugao', 'Kalinga', 'Mountain Province'],
+    'CAR': [
+      'Abra',
+      'Apayao',
+      'Benguet',
+      'Ifugao',
+      'Kalinga',
+      'Mountain Province',
+    ],
     'Region I': ['Ilocos Norte', 'Ilocos Sur', 'La Union', 'Pangasinan'],
-    'Region III': ['Aurora', 'Bataan', 'Bulacan', 'Nueva Ecija', 'Pampanga', 'Tarlac', 'Zambales'],
+    'Region III': [
+      'Aurora',
+      'Bataan',
+      'Bulacan',
+      'Nueva Ecija',
+      'Pampanga',
+      'Tarlac',
+      'Zambales',
+    ],
   };
 
   @override
@@ -86,12 +101,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now().subtract(Duration(days: 365 * 18)),
+      initialDate:
+          _selectedDate ?? DateTime.now().subtract(Duration(days: 365 * 18)),
       firstDate: DateTime(1950),
       lastDate: DateTime.now(),
       helpText: 'Select Birthdate',
     );
-    
+
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -116,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
         contactNumber: _contactNumberController.text.trim(),
-        birthdate: _birthdateController.text.trim(), 
+        birthdate: _birthdateController.text.trim(),
         employmentStatus: _employmentStatusController.text.trim(),
         company: _companyController.text.trim(),
         region: _region,
@@ -150,8 +166,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       print('Registration error: $e');
       setState(() {
         _errorMessage = e.toString();
-        if (_errorMessage!.contains('Exception: Registration failed: Exception: ')) {
-          _errorMessage = _errorMessage!.replaceFirst('Exception: Registration failed: Exception: ', '');
+        if (_errorMessage!.contains(
+          'Exception: Registration failed: Exception: ',
+        )) {
+          _errorMessage = _errorMessage!.replaceFirst(
+            'Exception: Registration failed: Exception: ',
+            '',
+          );
         }
       });
     } finally {
@@ -164,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // // Test direct registration
   // Future<void> _testDirectRegistration() async {
   //   if (!_formKey.currentState!.validate()) return;
-    
+
   //   setState(() {
   //     _isLoading = true;
   //     _errorMessage = null;
@@ -172,9 +193,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   //   try {
   //     final apiService = ApiService();
-      
+
   //     print('Testing direct registration...');
-      
+
   //     final result = await apiService.register(
   //       firstName: _firstNameController.text.trim(),
   //       lastName: _lastNameController.text.trim(),
@@ -187,17 +208,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   //       region: _region,
   //       province: _province,
   //     );
-      
+
   //     setState(() {
   //       _errorMessage = "✅ Registration successful! User ID: ${result['user']['id']}";
   //     });
-      
+
   //     Future.delayed(Duration(seconds: 1), () {
   //       if (mounted) {
   //         Navigator.of(context).pushReplacementNamed('/home');
   //       }
   //     });
-      
+
   //   } catch (e) {
   //     print('Direct registration test error: $e');
   //     setState(() {
@@ -251,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
-                      gradient: kGreenGradient,
+                      gradient: kGreenGradient1,
                     ),
                     const SizedBox(height: 24),
 
@@ -261,7 +282,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: TextFormField(
                             controller: _firstNameController,
-                            decoration: authInputDecoration.copyWith(labelText: 'First Name'),
+                            decoration: authInputDecoration.copyWith(
+                              labelText: 'First Name',
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Required';
@@ -274,7 +297,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: TextFormField(
                             controller: _lastNameController,
-                            decoration: authInputDecoration.copyWith(labelText: 'Last Name'),
+                            decoration: authInputDecoration.copyWith(
+                              labelText: 'Last Name',
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Required';
@@ -291,12 +316,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: authInputDecoration.copyWith(labelText: 'Email Address'),
+                      decoration: authInputDecoration.copyWith(
+                        labelText: 'Email Address',
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -308,7 +337,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _contactNumberController,
                       keyboardType: TextInputType.phone,
-                      decoration: authInputDecoration.copyWith(labelText: 'Contact Number'),
+                      decoration: authInputDecoration.copyWith(
+                        labelText: 'Contact Number',
+                      ),
                     ),
                     const SizedBox(height: 10),
 
@@ -316,7 +347,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: authInputDecoration.copyWith(labelText: 'Password'),
+                      decoration: authInputDecoration.copyWith(
+                        labelText: 'Password',
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a password';
@@ -333,7 +366,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: true,
-                      decoration: authInputDecoration.copyWith(labelText: 'Confirm Password'),
+                      decoration: authInputDecoration.copyWith(
+                        labelText: 'Confirm Password',
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
@@ -351,23 +386,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: _errorMessage!.contains('✅') 
-                              ? Colors.green.withOpacity(0.1) 
-                              : Colors.red.withOpacity(0.1),
+                          color:
+                              _errorMessage!.contains('✅')
+                                  ? Colors.green.withOpacity(0.1)
+                                  : Colors.red.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: _errorMessage!.contains('✅') ? Colors.green : Colors.red,
+                            color:
+                                _errorMessage!.contains('✅')
+                                    ? Colors.green
+                                    : Colors.red,
                           ),
                         ),
                         child: Text(
                           _errorMessage!,
                           style: TextStyle(
-                            color: _errorMessage!.contains('✅') ? Colors.green : Colors.red,
+                            color:
+                                _errorMessage!.contains('✅')
+                                    ? Colors.green
+                                    : Colors.red,
                           ),
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    
+
                     if (_errorMessage != null) const SizedBox(height: 16),
 
                     // Register button
@@ -382,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       icon: _isLoading ? null : null,
                     ),
-                    
+
                     if (_isLoading)
                       Center(
                         child: Padding(
@@ -397,10 +439,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-                    
+
                     const SizedBox(height: 16),
-                    
-                 
 
                     // Login link
                     Center(
@@ -409,10 +449,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           Text(
                             'Already have an account? ',
-                            style: TextStyle(
-                              color: kGreen1,
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: kGreen1, fontSize: 12),
                           ),
                           InkWell(
                             onTap: () {
@@ -425,7 +462,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontWeight: FontWeight.w600,
                                 decoration: TextDecoration.underline,
                               ),
-                              gradient: kGreenGradient,
+                              gradient: kGreenGradient1,
                             ),
                           ),
                         ],

@@ -1,80 +1,85 @@
+//------------- Imports -------------//
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'onboarding_screen.dart';
+import 'package:cylcentral_app/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+//------------- Splash Screen Widget -------------//
+/// Main splash screen that shows app logo with fade animation
+/// Automatically navigates after 5 seconds based on user onboarding status
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+//------------- Splash Screen State -------------//
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller; // Controls fade animation timing
+  late Animation<double> _fadeAnimation; // Opacity transition curve
+
+  //------- Initialization -------//
   @override
   void initState() {
     super.initState();
+    // Setup fade animation with 800ms duration
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    )..forward(); // Start animation immediately
+
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _startNavigationTimer(); // Begin 5-second countdown
+  }
+
+  //------- Navigation Logic -------//
+  /// Checks onboarding status and navigates accordingly after 5 seconds
+  /// First-time users → Onboarding screen
+  /// Returning users → Login screen
+  void _startNavigationTimer() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasCompletedOnboarding =
+        prefs.getBool('hasCompletedOnboarding') ?? false;
+    final userRole = prefs.getString('user_role');
     Timer(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
+      if (mounted) {
+        // Safety check to prevent navigation on disposed widget
+        if (hasCompletedOnboarding) {
+          Navigator.pushReplacementNamed(context, '/login');
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          );
+        }
+      }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(child: FadeInGifLogo()),
-    );
-  }
-}
-
-class FadeInGifLogo extends StatefulWidget {
-  const FadeInGifLogo({Key? key}) : super(key: key);
-
-  @override
-  State<FadeInGifLogo> createState() => _FadeInGifLogoState();
-}
-
-class _FadeInGifLogoState extends State<FadeInGifLogo>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-    _controller.forward();
-  }
-
-  @override
   void dispose() {
-    _controller.dispose();
+    _controller.dispose(); // Cleanup animation controller
     super.dispose();
   }
 
+  //------- Build UI -------//
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: Image.asset(
-        'assets/images/logo.gif',
-        width: 200,
-        height: 200,
-        fit: BoxFit.contain,
-        // This will make the GIF play only once
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          if (frame == null) {
-            return const SizedBox(); // Show nothing while loading
-          }
-          return child;
-        },
+    return Scaffold(
+      backgroundColor: kMint, // Custom mint green background
+      body: Center(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Image.asset(
+            'assets/images/logo.gif', // Animated logo asset
+            width: 200,
+            height: 200,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }

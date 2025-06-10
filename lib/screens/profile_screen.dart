@@ -6,16 +6,18 @@ import '../providers/auth_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User? user;
-  
+
   const ProfileScreen({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    
+
     // If user is null, attempt to get it from auth provider
-    final currentUser = user ?? (authProvider.user != null ? User.fromMap(authProvider.user!) : null);
-    
+    final currentUser =
+        user ??
+        (authProvider.user != null ? User.fromMap(authProvider.user!) : null);
+
     // If we still don't have a user, show a loading indicator
     if (currentUser == null) {
       return Scaffold(
@@ -30,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           flexibleSpace: Container(
-            decoration: const BoxDecoration(gradient: kGreenGradient),
+            decoration: const BoxDecoration(gradient: kGreenGradient1),
           ),
           elevation: 0,
         ),
@@ -41,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
         ),
       );
     }
-    
+
     return Scaffold(
       backgroundColor: kMint,
       appBar: AppBar(
@@ -54,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: kGreenGradient),
+          decoration: const BoxDecoration(gradient: kGreenGradient1),
         ),
         elevation: 0,
         actions: [
@@ -63,10 +65,9 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () async {
               await authProvider.logout();
               if (context.mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login', 
-                  (route) => false,
-                );
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
           ),
@@ -78,24 +79,26 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            
+
             // Profile Image
             CircleAvatar(
               radius: 60,
               backgroundColor: kGreen2.withOpacity(0.2),
-              child: currentUser.firstName.isNotEmpty && currentUser.lastName.isNotEmpty
-                ? Text(
-                    '${currentUser.firstName[0]}${currentUser.lastName[0]}',
-                    style: const TextStyle(
-                      fontSize: 36, 
-                      fontWeight: FontWeight.bold,
-                      color: kGreen1,
-                    ),
-                  )
-                : const Icon(Icons.person, size: 60, color: kGreen1),
+              child:
+                  currentUser.firstName.isNotEmpty &&
+                          currentUser.lastName.isNotEmpty
+                      ? Text(
+                        '${currentUser.firstName[0]}${currentUser.lastName[0]}',
+                        style: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: kGreen1,
+                        ),
+                      )
+                      : const Icon(Icons.person, size: 60, color: kGreen1),
             ),
             const SizedBox(height: 16),
-            
+
             // User name
             Text(
               '${currentUser.firstName} ${currentUser.lastName}',
@@ -106,17 +109,14 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            
+
             // User email
             Text(
               currentUser.email,
-              style: TextStyle(
-                fontSize: 14,
-                color: kGreen1.withOpacity(0.8),
-              ),
+              style: TextStyle(fontSize: 14, color: kGreen1.withOpacity(0.8)),
             ),
             const SizedBox(height: 24),
-            
+
             // Profile details card
             Container(
               width: double.infinity,
@@ -145,34 +145,35 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
-                  _buildInfoRow('Contact Number', currentUser.contactNumber ?? 'Not provided'),
+
+                  _buildInfoRow(
+                    'Contact Number',
+                    currentUser.contactNumber ?? 'Not provided',
+                  ),
                   const Divider(),
-                  if (currentUser.region != null) 
+                  if (currentUser.region != null)
                     _buildInfoRow('Region', currentUser.region ?? ''),
-                  if (currentUser.region != null) 
-                    const Divider(),
-                  if (currentUser.province != null) 
+                  if (currentUser.region != null) const Divider(),
+                  if (currentUser.province != null)
                     _buildInfoRow('Province', currentUser.province ?? ''),
-                  if (currentUser.province != null) 
-                    const Divider(),
+                  if (currentUser.province != null) const Divider(),
                   _buildInfoRow('Account Type', currentUser.role ?? 'Member'),
                   const Divider(),
-                  _buildInfoRow('Joined', currentUser.createdAt?.split(' ')[0] ?? 'Recently'),
+                  _buildInfoRow(
+                    'Joined',
+                    currentUser.createdAt?.split(' ')[0] ?? 'Recently',
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Edit Profile Button
-            _buildGreenGradientButton(
-              'Edit Profile',
-              () {
-                // Navigate to edit profile screen
-              },
-            ),
+            _buildGreenGradientButton('Edit Profile', () {
+              // Navigate to edit profile screen
+            }),
             const SizedBox(height: 16),
-            
+
             // Settings Button
             ElevatedButton(
               onPressed: () {
@@ -196,20 +197,14 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[700],
-            ),
-          ),
+          Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
           Text(
             value,
             style: const TextStyle(
@@ -222,14 +217,14 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   // Implementing the GreenGradientButton here since it's missing
   Widget _buildGreenGradientButton(String text, VoidCallback onPressed) {
     return Container(
       width: double.infinity,
       height: 48,
       decoration: BoxDecoration(
-        gradient: kGreenGradient,
+        gradient: kGreenGradient1,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -244,9 +239,7 @@ class ProfileScreen extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: Text(
           text,

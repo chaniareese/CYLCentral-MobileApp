@@ -40,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
     // Fetch programs and events when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProgramProvider>(context, listen: false).fetchPrograms();
-      Provider.of<EventProvider>(context, listen: false).fetchEvents(limit: 5); // Fetch latest events
+      Provider.of<EventProvider>(
+        context,
+        listen: false,
+      ).fetchEvents(limit: 5); // Fetch latest events
     });
   }
 
@@ -74,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: kGreenGradient),
+          decoration: const BoxDecoration(gradient: kGreenGradient1),
         ),
         elevation: 0,
       ),
@@ -84,70 +87,71 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Welcome Message with Profile Picture
             // Replace the Welcome Message Container with this:
-// Replace the Welcome Message with Profile Picture section with this code:
-Container(
-  padding: const EdgeInsets.all(16.0),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      // Welcome text on the left - with Expanded to prevent overflow
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // Use Flexible to allow the text to shrink if needed
-                Flexible(
-                  child: Text(
-                    'Hi, ${widget.user.firstName}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: kGreen1,
+            // Replace the Welcome Message with Profile Picture section with this code:
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Welcome text on the left - with Expanded to prevent overflow
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            // Use Flexible to allow the text to shrink if needed
+                            Flexible(
+                              child: Text(
+                                'Hi, ${widget.user.firstName}',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: kGreen1,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const Text(' 👋', style: TextStyle(fontSize: 24)),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'What\'s your plan today? Explore events!',
+                          style: TextStyle(fontSize: 16, color: Colors.brown),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const Text(' 👋', style: TextStyle(fontSize: 24)),
-              ],
+
+                  const SizedBox(
+                    width: 8,
+                  ), // Add spacing between text and profile picture
+                  // Profile Picture on the right
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage:
+                        widget.user.profilePicture != null &&
+                                widget.user.profilePicture!.isNotEmpty
+                            ? NetworkImage(widget.user.profilePicture!)
+                            : null,
+                    child:
+                        (widget.user.profilePicture == null ||
+                                widget.user.profilePicture!.isEmpty)
+                            ? const Icon(
+                              Icons.person,
+                              size: 36,
+                              color: Colors.grey,
+                            )
+                            : null,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 6),
-            const Text(
-              'What\'s your plan today? Explore events!',
-              style: TextStyle(fontSize: 16, color: Colors.brown),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-      
-      const SizedBox(width: 8), // Add spacing between text and profile picture
-      
-      // Profile Picture on the right
-      CircleAvatar(
-        radius: 28,
-        backgroundColor: Colors.grey[200],
-        backgroundImage:
-            widget.user.profilePicture != null &&
-                widget.user.profilePicture!.isNotEmpty
-                ? NetworkImage(widget.user.profilePicture!)
-                : null,
-        child:
-            (widget.user.profilePicture == null ||
-                widget.user.profilePicture!.isEmpty)
-                ? const Icon(
-                  Icons.person,
-                  size: 36,
-                  color: Colors.grey,
-                )
-                : null,
-      ),
-    ],
-  ),
-),
 
             // Search and Filter Row
             Padding(
@@ -205,7 +209,7 @@ Container(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: SizedBox(
-                  height: 150, 
+                  height: 150,
                   width: double.infinity,
                   child: CarouselSlider(
                     options: CarouselOptions(
@@ -225,20 +229,21 @@ Container(
                       height: 150,
                       padEnds: false,
                     ),
-                    items: _bannerImages.map((item) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width - 32, 
-                            child: Image.asset(
-                              item,
-                              fit: BoxFit.fitHeight,
-                              alignment: Alignment.center,
-                            ),
+                    items:
+                        _bannerImages.map((item) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width - 32,
+                                child: Image.asset(
+                                  item,
+                                  fit: BoxFit.fitHeight,
+                                  alignment: Alignment.center,
+                                ),
+                              );
+                            },
                           );
-                        },
-                      );
-                    }).toList(),
+                        }).toList(),
                   ),
                 ),
               ),
@@ -249,19 +254,21 @@ Container(
             // Carousel Indicators
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _bannerImages.asMap().entries.map((entry) {
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentCarouselIndex == entry.key
-                        ? kGreen1
-                        : kGreen1.withOpacity(0.3),
-                  ),
-                );
-              }).toList(),
+              children:
+                  _bannerImages.asMap().entries.map((entry) {
+                    return Container(
+                      width: 8.0,
+                      height: 8.0,
+                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            _currentCarouselIndex == entry.key
+                                ? kGreen1
+                                : kGreen1.withOpacity(0.3),
+                      ),
+                    );
+                  }).toList(),
             ),
 
             const SizedBox(height: 20),
@@ -298,33 +305,34 @@ Container(
             ),
 
             const SizedBox(height: 10),
-            
+
             // Programs Horizontal List
             SizedBox(
               height: 180, // Reduced height for smaller cards
-              child: programProvider.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(color: kGreen1),
-                  )
-                : programProvider.error != null
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Failed to load programs',
-                            style: TextStyle(color: Colors.red[800]),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => programProvider.fetchPrograms(),
-                            child: const Text('Retry'),
-                          ),
-                        ],
-                      ),
-                    )
-                  : programProvider.programs.isEmpty
-                    ? const Center(child: Text('No programs available'))
-                    : ListView.builder(
+              child:
+                  programProvider.isLoading
+                      ? const Center(
+                        child: CircularProgressIndicator(color: kGreen1),
+                      )
+                      : programProvider.error != null
+                      ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Failed to load programs',
+                              style: TextStyle(color: Colors.red[800]),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => programProvider.fetchPrograms(),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      )
+                      : programProvider.programs.isEmpty
+                      ? const Center(child: Text('No programs available'))
+                      : ListView.builder(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         itemCount: programProvider.programs.length,
@@ -372,46 +380,52 @@ Container(
 
             // Latest Events List
             eventProvider.isLoading
-              ? const Padding(
+                ? const Padding(
                   padding: EdgeInsets.symmetric(vertical: 24.0),
-                  child: Center(child: CircularProgressIndicator(color: kGreen1)),
+                  child: Center(
+                    child: CircularProgressIndicator(color: kGreen1),
+                  ),
                 )
-              : eventProvider.error != null
+                : eventProvider.error != null
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Failed to load events',
-                            style: TextStyle(color: Colors.red[800]),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => eventProvider.fetchEvents(),
-                            child: const Text('Retry'),
-                          ),
-                        ],
-                      ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 24.0,
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Failed to load events',
+                          style: TextStyle(color: Colors.red[800]),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => eventProvider.fetchEvents(),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
+                )
                 : eventProvider.events.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-                      child: Center(
-                        child: Text('No upcoming events available'),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: eventProvider.events.length,
-                        itemBuilder: (context, index) {
-                          return _buildEventCard(eventProvider.events[index]);
-                        },
-                      ),
-                    ),
+                ? const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 24.0,
+                  ),
+                  child: Center(child: Text('No upcoming events available')),
+                )
+                : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: eventProvider.events.length,
+                    itemBuilder: (context, index) {
+                      return _buildEventCard(eventProvider.events[index]);
+                    },
+                  ),
+                ),
 
             const SizedBox(height: 24),
           ],
@@ -458,16 +472,17 @@ Container(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                   child: SizedBox(
                     height: 90, // Half the card height for the image
-                    child: program.programHeaderPhoto != null 
-                      ? Image.network(
-                          program.programHeaderPhoto!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        )
-                      : Container(color: kMint),
+                    child:
+                        program.programHeaderPhoto != null
+                            ? Image.network(
+                              program.programHeaderPhoto!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                            : Container(color: kMint),
                   ),
                 ),
-                
+
                 // Program Logo overlay in circle
                 Container(
                   width: 60,
@@ -485,28 +500,26 @@ Container(
                     ],
                   ),
                   child: ClipOval(
-                    child: program.logo != null 
-                      ? Image.network(
-                          program.logo!,
-                          fit: BoxFit.cover,
-                        )
-                      : Center(
-                          child: Text(
-                            program.name.length > 1
-                              ? program.name.substring(0, 2).toUpperCase()
-                              : program.name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: kGreen1,
+                    child:
+                        program.logo != null
+                            ? Image.network(program.logo!, fit: BoxFit.cover)
+                            : Center(
+                              child: Text(
+                                program.name.length > 1
+                                    ? program.name.substring(0, 2).toUpperCase()
+                                    : program.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: kGreen1,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
                   ),
                 ),
               ],
             ),
-            
+
             // Bottom half with text content
             Padding(
               padding: const EdgeInsets.all(12.0),
@@ -525,9 +538,9 @@ Container(
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   // Program Description
                   Text(
                     program.description,
@@ -547,7 +560,7 @@ Container(
       ),
     );
   }
-  
+
   // Event card builder
   Widget _buildEventCard(Event event) {
     return GestureDetector(
@@ -582,23 +595,19 @@ Container(
               Container(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(
-                  color: kMint.withOpacity(0.5),
-                ),
-                child: event.poster != null
-                  ? Image.network(
-                      event.poster!,
-                      fit: BoxFit.cover,
-                    )
-                  : Center(
-                      child: Icon(
-                        Icons.calendar_today,
-                        size: 40,
-                        color: kGreen1,
-                      ),
-                    ),
+                decoration: BoxDecoration(color: kMint.withOpacity(0.5)),
+                child:
+                    event.poster != null
+                        ? Image.network(event.poster!, fit: BoxFit.cover)
+                        : Center(
+                          child: Icon(
+                            Icons.calendar_today,
+                            size: 40,
+                            color: kGreen1,
+                          ),
+                        ),
               ),
-              
+
               // Right side - Event Details
               Expanded(
                 child: Padding(
@@ -616,7 +625,7 @@ Container(
                           color: Colors.red[700],
                         ),
                       ),
-                      
+
                       // Title
                       Text(
                         event.title,
@@ -628,11 +637,15 @@ Container(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      
+
                       // Time and Location
                       Row(
                         children: [
-                          const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                          const Icon(
+                            Icons.access_time,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             event.formattedTime ?? 'TBA',
@@ -643,10 +656,14 @@ Container(
                           ),
                         ],
                       ),
-                      
+
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
@@ -661,12 +678,12 @@ Container(
                           ),
                         ],
                       ),
-                      
+
                       // Program name with logo
                       Row(
                         children: [
                           event.programLogo != null
-                            ? Container(
+                              ? Container(
                                 width: 16,
                                 height: 16,
                                 decoration: BoxDecoration(
@@ -677,7 +694,11 @@ Container(
                                   ),
                                 ),
                               )
-                            : const Icon(Icons.business, size: 16, color: Colors.grey),
+                              : const Icon(
+                                Icons.business,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
