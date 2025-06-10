@@ -5,9 +5,9 @@ import '/data/models/event_model.dart';
 
 class EventDetailScreen extends StatelessWidget {
   final Event event;
-  
+
   const EventDetailScreen({Key? key, required this.event}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,19 +32,12 @@ class EventDetailScreen extends StatelessWidget {
                 children: [
                   // Event Poster
                   event.poster != null
-                    ? Image.network(
-                        event.poster!,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
+                      ? Image.network(event.poster!, fit: BoxFit.cover)
+                      : Container(
                         decoration: const BoxDecoration(
-                          gradient: kGreenGradient,
+                          gradient: kGreenGradient1,
                         ),
-                        child: const Icon(
-                          Icons.event,
-                          color: kWhite,
-                          size: 60,
-                        ),
+                        child: const Icon(Icons.event, color: kWhite, size: 60),
                       ),
                   // Gradient overlay for better text visibility
                   const DecoratedBox(
@@ -52,10 +45,7 @@ class EventDetailScreen extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black54,
-                        ],
+                        colors: [Colors.transparent, Colors.black54],
                       ),
                     ),
                   ),
@@ -63,7 +53,7 @@ class EventDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Event Content
           SliverToBoxAdapter(
             child: Column(
@@ -126,9 +116,9 @@ class EventDetailScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                       const Divider(height: 24),
-                      
+
                       // Location
                       Row(
                         children: [
@@ -158,11 +148,10 @@ class EventDetailScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   event.eventLocation ?? 'To be announced',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
+                                  style: const TextStyle(fontSize: 14),
                                 ),
-                                if (event.eventFormat == 'online' && event.eventPlatform != null)
+                                if (event.eventFormat == 'online' &&
+                                    event.eventPlatform != null)
                                   Text(
                                     'Platform: ${event.eventPlatform}',
                                     style: TextStyle(
@@ -175,9 +164,10 @@ class EventDetailScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                       // Join link if online event
-                      if (event.eventFormat == 'online' && event.eventLink != null)
+                      if (event.eventFormat == 'online' &&
+                          event.eventLink != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: ElevatedButton.icon(
@@ -201,7 +191,7 @@ class EventDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Program info
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -213,12 +203,19 @@ class EventDetailScreen extends StatelessWidget {
                         child: SizedBox(
                           width: 40,
                           height: 40,
-                          child: event.programLogo != null
-                            ? Image.network(event.programLogo!, fit: BoxFit.cover)
-                            : Container(
-                                color: kMint,
-                                child: const Icon(Icons.business, color: kGreen1),
-                              ),
+                          child:
+                              event.programLogo != null
+                                  ? Image.network(
+                                    event.programLogo!,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Container(
+                                    color: kMint,
+                                    child: const Icon(
+                                      Icons.business,
+                                      color: kGreen1,
+                                    ),
+                                  ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -248,16 +245,22 @@ class EventDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Registration Info
                 Container(
                   margin: const EdgeInsets.all(16.0),
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: event.isFree ? Colors.green.withOpacity(0.1) : Colors.amber.withOpacity(0.1),
+                    color:
+                        event.isFree
+                            ? Colors.green.withOpacity(0.1)
+                            : Colors.amber.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: event.isFree ? Colors.green.withOpacity(0.3) : Colors.amber.withOpacity(0.3),
+                      color:
+                          event.isFree
+                              ? Colors.green.withOpacity(0.3)
+                              : Colors.amber.withOpacity(0.3),
                     ),
                   ),
                   child: Row(
@@ -277,7 +280,10 @@ class EventDetailScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: event.isFree ? Colors.green[700] : Colors.amber[800],
+                                color:
+                                    event.isFree
+                                        ? Colors.green[700]
+                                        : Colors.amber[800],
                               ),
                             ),
                             if (!event.isFree && event.registrationFee != null)
@@ -303,7 +309,7 @@ class EventDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Event Description Header
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -316,7 +322,7 @@ class EventDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Event Description
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -329,9 +335,9 @@ class EventDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Inclusions if any
-                if (event.inclusions != null && event.inclusions!.isNotEmpty) 
+                if (event.inclusions != null && event.inclusions!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -356,7 +362,7 @@ class EventDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                
+
                 // Event Head
                 if (event.eventHeadName != null)
                   Padding(
@@ -387,7 +393,7 @@ class EventDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                
+
                 // Bottom padding
                 const SizedBox(height: 24),
               ],

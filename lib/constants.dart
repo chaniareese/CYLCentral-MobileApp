@@ -1,68 +1,90 @@
 import 'package:flutter/material.dart';
 
-// Solid Colors
-const Color kYellow = Color(0xFFFFB800);
-const Color kGreen1 = Color(0xFF003D2B);
-const Color kGreen2 = Color(0xFF21A179);
-const Color kMint = Color(0xFFE4F1EA);
-const Color kBlack = Color(0xFF141414);
-const Color kWhite = Color(0xFFFFFFFF);
-const Color kBrown = Color(0xFFC56659);
+//#------- Solid Colors -------#
+const Color kGreen1 = Color(0xFF003D2B); // Green
+const Color kGreen2 = Color(0xFF21A179); // Light Green
+const Color kMint = Color(0xFFE4F1EA); // Lightest Green
+const Color kBrown = Color(0xFFA24E43); // Brown
+const Color kBrown1 = Color(0xFF6A2117); // Dark Brown
+const Color kBlack = Color(0xFF141414); // Black
+const Color kWhite = Color(0xFFFFFFFF); // White
 
-// Gradient Colors
-const LinearGradient kGreenGradient = LinearGradient(
+//#------- Gradient Colors -------#
+const LinearGradient kGreenGradient1 = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [
-    Color(0xFF003D2B), // Dark Green
-    Color(0xFF00A373), // Light Green
-  ],
+  colors: [Color(0xFF003D2B), Color(0xFF00A373)],
 );
-
+const LinearGradient kGreenGradient2 = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF21A179), Color(0xFFE4F1EA)],
+);
 const LinearGradient kBrownGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
-  colors: [
-    Color(0xFFA24E43), // Dark Brown
-    Color(0xFFC56659), // Light Brown
-  ],
+  colors: [Color(0xFF6A2117), Color(0xFFA24E43)],
 );
 
 // Spacing & Layout
 const double defaultPadding = 16.0;
 
 // API URLs
-const String kApiBaseUrl = 'http://localhost:8000'; // Replace with your actual API URL
+const String kApiBaseUrl =
+    'http://localhost:8000'; // Replace with your actual API URL
 
 // Complete TextField styling
 final InputDecoration authInputDecoration = InputDecoration(
   filled: true,
   fillColor: kWhite,
   isDense: true,
-  contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12), // Tighter padding
+  contentPadding: const EdgeInsets.symmetric(
+    vertical: 12,
+    horizontal: 12,
+  ), // Tighter padding
   labelStyle: TextStyle(
-    color: Color.fromARGB(128, kGreen1.red, kGreen1.green, kGreen1.blue), // 50% opacity
+    color: Color.fromARGB(
+      128,
+      kGreen1.red,
+      kGreen1.green,
+      kGreen1.blue,
+    ), // 50% opacity
     fontSize: 12, // Smaller label
   ),
   // Border states
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(6),
     borderSide: BorderSide(
-      color: Color.fromARGB((255 * 0.2).round(), kGreen1.red, kGreen1.green, kGreen1.blue),
+      color: Color.fromARGB(
+        (255 * 0.2).round(),
+        kGreen1.red,
+        kGreen1.green,
+        kGreen1.blue,
+      ),
       width: 1.0,
     ),
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(6),
     borderSide: BorderSide(
-      color: Color.fromARGB((255 * 0.2).round(), kGreen1.red, kGreen1.green, kGreen1.blue),
+      color: Color.fromARGB(
+        (255 * 0.2).round(),
+        kGreen1.red,
+        kGreen1.green,
+        kGreen1.blue,
+      ),
       width: 1.0,
     ),
   ),
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(6),
     borderSide: BorderSide(
-      color: Color.fromARGB((255 * 0.2).round(), kGreen1.red, kGreen1.green, kGreen1.blue),
+      color: Color.fromARGB(
+        (255 * 0.2).round(),
+        kGreen1.red,
+        kGreen1.green,
+        kGreen1.blue,
+      ),
       width: 1.0,
     ),
   ),
@@ -127,9 +149,11 @@ class GreenGradientButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Container(
-            padding: padding ?? const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding:
+                padding ??
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             decoration: BoxDecoration(
-              gradient: kGreenGradient,
+              gradient: kGreenGradient1,
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             child: Row(
@@ -137,19 +161,17 @@ class GreenGradientButton extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style: textStyle ?? const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: kWhite,
-                  ),
+                  style:
+                      textStyle ??
+                      const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: kWhite,
+                      ),
                 ),
                 if (icon != null) ...[
                   const SizedBox(width: 4),
-                  Icon(
-                    icon,
-                    size: iconSize ?? 16,
-                    color: kWhite,
-                  ),
+                  Icon(icon, size: iconSize ?? 16, color: kWhite),
                 ],
               ],
             ),

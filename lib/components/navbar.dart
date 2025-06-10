@@ -53,7 +53,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     bool isExplore = label == 'Explore';
     double iconSize = isExplore ? 32.0 : 24.0; // Bigger icon for Explore
     double fontSize = isExplore ? 14.0 : 12.0; // Bigger text for Explore
-    
+
     return GestureDetector(
       onTap: () => widget.onTap(index),
       child: Container(
@@ -67,7 +67,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               height: 4,
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
-                gradient: isSelected ? kGreenGradient : null,
+                gradient: isSelected ? kGreenGradient1 : null,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -75,28 +75,38 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ShaderMask(
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
-                  colors: kGreenGradient.colors,
-                  begin: kGreenGradient.begin as Alignment,
-                  end: kGreenGradient.end as Alignment,
+                  colors: kGreenGradient1.colors,
+                  begin: kGreenGradient1.begin as Alignment,
+                  end: kGreenGradient1.end as Alignment,
                 ).createShader(bounds);
               },
               child: Image.asset(
                 iconPath,
                 width: iconSize,
                 height: iconSize,
-                color: Colors.white, // The color will be overridden by gradient shader
-                opacity: AlwaysStoppedAnimation(isSelected ? 1.0 : 0.5), // 50% opacity when not selected
+                color:
+                    Colors
+                        .white, // The color will be overridden by gradient shader
+                opacity: AlwaysStoppedAnimation(
+                  isSelected ? 1.0 : 0.5,
+                ), // 50% opacity when not selected
               ),
             ),
             const SizedBox(height: 4),
             // Label
             Opacity(
-              opacity: isSelected ? 1.0 : 0.5, // Apply 50% opacity for inactive items
+              opacity:
+                  isSelected
+                      ? 1.0
+                      : 0.5, // Apply 50% opacity for inactive items
               child: Text(
                 label,
                 style: TextStyle(
                   fontSize: fontSize,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, // SemiBold only when active
+                  fontWeight:
+                      isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400, // SemiBold only when active
                   color: kGreen1, // Using green1 color directly
                 ),
               ),
