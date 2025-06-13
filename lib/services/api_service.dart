@@ -1,13 +1,17 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config.dart';
 
+// API SERVICE CLASS - Sends login requests to the backend and receives the user data.
+
 class ApiService {
-  // Using dynamic API URL from Config class
+  // Get API base URL from config (for general use)
   String get baseUrl => Config.apiBaseUrl;
 
-  // Get the base URL without /api for direct API file access
+  // Get server URL without /api suffix for direct PHP file access
   String get baseServerUrl {
     final url = Config.apiBaseUrl;
     if (url.endsWith('/api')) {
@@ -16,21 +20,19 @@ class ApiService {
     return url;
   }
 
-  // Utility function to clean PHP warnings from JSON responses
+  // Clean PHP warnings or HTML from JSON responses (for buggy backend responses)
   String cleanJsonResponse(String response) {
-    // If response contains HTML/PHP warnings
     if (response.contains('<br />') ||
         response.contains('<b>') ||
         response.contains('Warning') ||
         response.contains('Notice')) {
-      // Extract valid JSON from the response
       final jsonStart = response.indexOf('{');
       final jsonEnd = response.lastIndexOf('}') + 1;
-
       if (jsonStart >= 0 && jsonEnd > jsonStart) {
         final cleanedJson = response.substring(jsonStart, jsonEnd);
-        print(
+        developer.log(
           'Cleaned JSON response: Length before=${response.length}, after=${cleanedJson.length}',
+          name: 'ApiService',
         );
         return cleanedJson;
       }
@@ -39,32 +41,44 @@ class ApiService {
     return response;
   }
 
-  // Store the auth token
+  // Store the auth token in memory (for quick access)
   String? _token;
 
-  // Get the stored token
+  // Use secure storage for sensitive tokens
+  static const _secureStorage = FlutterSecureStorage();
+
+  // Get the stored token from memory or secure storage
   Future<String?> getToken() async {
     if (_token != null) return _token;
-
+    // Try secure storage first
+    final secureToken = await _secureStorage.read(key: 'token');
+    if (secureToken != null) {
+      _token = secureToken;
+      return secureToken;
+    }
+    // Fallback to SharedPreferences for legacy support
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 
-  // Save the auth token
+  // Save the auth token to memory and secure storage
   Future<void> setToken(String token) async {
     _token = token;
+    await _secureStorage.write(key: 'token', value: token);
+    // Also save to SharedPreferences for legacy support (optional)
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
 
-  // Clear the auth token on logout
+  // Remove the auth token from memory and secure storage
   Future<void> clearToken() async {
     _token = null;
+    await _secureStorage.delete(key: 'token');
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
   }
 
-  // Headers with authentication token
+  // Build headers for API requests (adds Authorization if token exists)
   Future<Map<String, String>> _getHeaders() async {
     final token = await getToken();
     return {
@@ -75,53 +89,58 @@ class ApiService {
     };
   }
 
-  // Test API connectivity with direct API file
+  // Test API connectivity (OPTIONAL, for diagnostics)
   Future<bool> testApiConnection() async {
     try {
       final response = await http.get(
         Uri.parse('$baseServerUrl/direct_api.php'),
         headers: {'Accept': 'application/json'},
       );
-
-      print('Direct API test status: ${response.statusCode}');
-      print('Direct API test response: ${response.body}');
-
+      developer.log(
+        'Direct API test status: ${response.statusCode}',
+        name: 'ApiService',
+      );
+      developer.log(
+        'Direct API test response: ${response.body}',
+        name: 'ApiService',
+      );
       return response.statusCode == 200;
     } catch (e) {
-      print('API connection test error: $e');
+      developer.log('API connection test error', error: e, name: 'ApiService');
       return false;
     }
   }
 
-  // Login using direct API
+  // LOGIN: Authenticate user and get token + user data
   Future<Map<String, dynamic>> login({
     required String email,
     required String password,
   }) async {
     try {
       final loginEndpoint = '$baseServerUrl/direct_api.php?action=login';
-      print('Trying login via: $loginEndpoint');
-
+      developer.log('Trying login via: $loginEndpoint', name: 'ApiService');
       final response = await http.post(
         Uri.parse(loginEndpoint),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: await _getHeaders(),
         body: jsonEncode({'email': email, 'password': password}),
       );
-      print('Login response status: ${response.statusCode}');
-      print('Login response body: ${response.body}');
-
-      // Use the utility method to clean any PHP warnings from the response
+      developer.log(
+        'Login response status: ${response.statusCode}',
+        name: 'ApiService',
+      );
+      developer.log(
+        'Login response body: ${response.body}',
+        name: 'ApiService',
+      );
       String cleanedBody = cleanJsonResponse(response.body);
-
       final data = jsonDecode(cleanedBody);
-
       if (response.statusCode == 200 && data['status'] == 'success') {
         if (data['token'] != null) {
           await setToken(data['token']);
-          print('Token saved successfully from login');
+          developer.log(
+            'Token saved successfully from login',
+            name: 'ApiService',
+          );
         }
         return data;
       } else {
@@ -130,12 +149,12 @@ class ApiService {
         );
       }
     } catch (e) {
-      print('Login error: $e');
+      developer.log('Login error', error: e, name: 'ApiService');
       throw Exception('Login failed: $e');
     }
   }
 
-  // Register a new user
+  // REGISTER: Create a new user account
   Future<Map<String, dynamic>> register({
     required String firstName,
     required String lastName,
@@ -150,17 +169,16 @@ class ApiService {
   }) async {
     try {
       final endpoint = '$baseServerUrl/direct_api.php?action=register';
-      print('Registering user via direct API: $endpoint');
-
-      // Prepare registration data
+      developer.log(
+        'Registering user via direct API: $endpoint',
+        name: 'ApiService',
+      );
       final registrationData = {
         'first_name': firstName,
         'last_name': lastName,
         'email': email,
         'password': password,
       };
-
-      // Add optional fields if they're not null
       if (contactNumber != null && contactNumber.isNotEmpty) {
         registrationData['contact_number'] = contactNumber;
       }
@@ -179,38 +197,36 @@ class ApiService {
       if (province != null && province.isNotEmpty) {
         registrationData['province'] = province;
       }
-
-      print('Registration data: $registrationData');
-
-      // Send registration request
+      developer.log('Registration data: $registrationData', name: 'ApiService');
       final response = await http.post(
         Uri.parse(endpoint),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: await _getHeaders(),
         body: jsonEncode(registrationData),
       );
-      print('Registration response status: ${response.statusCode}');
-      print('Registration response body: ${response.body}');
-
-      // Parse the response
+      developer.log(
+        'Registration response status: ${response.statusCode}',
+        name: 'ApiService',
+      );
+      developer.log(
+        'Registration response body: ${response.body}',
+        name: 'ApiService',
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final cleanedBody = cleanJsonResponse(response.body);
         final responseData = jsonDecode(cleanedBody);
-
         if (responseData['status'] == 'success') {
-          // Store the authentication token
           if (responseData['token'] != null) {
             await setToken(responseData['token']);
-            print('Authentication token stored successfully');
+            developer.log(
+              'Authentication token stored successfully',
+              name: 'ApiService',
+            );
           }
           return responseData;
         } else {
           throw Exception(responseData['message'] ?? 'Registration failed');
         }
       } else {
-        // Try to parse error response
         try {
           final errorResponse = jsonDecode(response.body);
           throw Exception(
@@ -224,27 +240,27 @@ class ApiService {
         }
       }
     } catch (e) {
-      print('Registration error: $e');
+      developer.log('Registration error', error: e, name: 'ApiService');
       throw Exception('Registration failed: $e');
     }
   }
 
-  // Get user profile
+  // GET PROFILE: Fetch the authenticated user's profile
   Future<Map<String, dynamic>> getProfile() async {
     try {
       final token = await getToken();
       if (token == null) {
         throw Exception('Not authenticated');
       }
-
       final profileEndpoint = '$baseServerUrl/direct_api.php?action=profile';
       final response = await http.get(
         Uri.parse(profileEndpoint),
         headers: await _getHeaders(),
       );
-
-      print('Profile response status: ${response.statusCode}');
-
+      developer.log(
+        'Profile response status: ${response.statusCode}',
+        name: 'ApiService',
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -252,12 +268,12 @@ class ApiService {
         throw Exception(errorData['message'] ?? 'Failed to get profile');
       }
     } catch (e) {
-      print('Get profile error: $e');
+      developer.log('Get profile error', error: e, name: 'ApiService');
       throw Exception('Failed to get profile: $e');
     }
   }
 
-  // Update user profile
+  // UPDATE PROFILE: Update the authenticated user's profile
   Future<Map<String, dynamic>> updateProfile(
     Map<String, dynamic> profileData,
   ) async {
@@ -266,16 +282,16 @@ class ApiService {
       if (token == null) {
         throw Exception('Not authenticated');
       }
-
       final profileEndpoint = '$baseServerUrl/direct_api.php?action=profile';
       final response = await http.put(
         Uri.parse(profileEndpoint),
         headers: await _getHeaders(),
         body: jsonEncode(profileData),
       );
-
-      print('Update profile response status: ${response.statusCode}');
-
+      developer.log(
+        'Update profile response status: ${response.statusCode}',
+        name: 'ApiService',
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -283,12 +299,12 @@ class ApiService {
         throw Exception(errorData['message'] ?? 'Failed to update profile');
       }
     } catch (e) {
-      print('Update profile error: $e');
+      developer.log('Update profile error', error: e, name: 'ApiService');
       throw Exception('Failed to update profile: $e');
     }
   }
 
-  // Change password
+  // CHANGE PASSWORD: Change the authenticated user's password
   Future<Map<String, dynamic>> changePassword(
     String currentPassword,
     String newPassword,
@@ -298,7 +314,6 @@ class ApiService {
       if (token == null) {
         throw Exception('Not authenticated');
       }
-
       final endpoint = '$baseServerUrl/direct_api.php?action=change_password';
       final response = await http.post(
         Uri.parse(endpoint),
@@ -308,9 +323,10 @@ class ApiService {
           'new_password': newPassword,
         }),
       );
-
-      print('Change password response status: ${response.statusCode}');
-
+      developer.log(
+        'Change password response status: ${response.statusCode}',
+        name: 'ApiService',
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -318,19 +334,17 @@ class ApiService {
         throw Exception(errorData['message'] ?? 'Failed to change password');
       }
     } catch (e) {
-      print('Change password error: $e');
+      developer.log('Change password error', error: e, name: 'ApiService');
       throw Exception('Failed to change password: $e');
     }
   }
 
-  // Logout user
+  // LOGOUT: Clear the user's token (local only)
   Future<void> logout() async {
     try {
-      // Just clear the token locally
       await clearToken();
     } catch (e) {
-      print('Logout error: $e');
-      // Still clear token locally even if API call fails
+      developer.log('Logout error', error: e, name: 'ApiService');
       await clearToken();
     }
   }

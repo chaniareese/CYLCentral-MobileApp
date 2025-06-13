@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 40,
                 ), // Replace with actual logo asset path
-                Image.asset('assets/images/cylcentral_logo.png', height: 50),
+                Image.asset('assets/images/logo_name.png', height: 50),
                 const SizedBox(height: 77),
                 Column(
                   children: [

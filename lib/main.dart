@@ -8,7 +8,7 @@ import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
-import 'screens/get_started_screen.dart';
+// import 'screens/get_started_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/profile_screen.dart';
 // import 'screens/explore_screen.dart'; // Make sure to import explore_screen.dart
@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ProgramProvider()), 
-        ChangeNotifierProvider(create: (_) => EventProvider()),// Add this line
+        ChangeNotifierProvider(create: (_) => ProgramProvider()),
+        ChangeNotifierProvider(create: (_) => EventProvider()), // Add this line
       ],
       child: MaterialApp(
         title: 'CYL Central',
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/splash': (context) => const SplashScreen(),
           '/onboarding': (context) => const OnboardingScreen(),
-          '/get_started': (context) => const GetStartedScreen(),
+          // '/get_started': (context) => const GetStartedScreen(),
           '/login': (context) => const LoginScreen(),
           '/register': (context) => const RegisterScreen(),
           '/home': (context) => const HomeWrapper(),

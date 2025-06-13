@@ -1,3 +1,6 @@
+// HomeWrapper: Decides which main screen to show based on user role after login.
+// Converts the user map from AuthProvider to a User model and navigates accordingly.
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -11,29 +14,41 @@ class HomeWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final userMap = authProvider.user;
-    
+
+    // Show loading indicator if user data is not yet available
+    // TODO: Handle this more gracefully in UI
     if (userMap == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    
-    // Convert user map to User model and navigate to member screen
+
+    // Convert user map to User model for type safety and role helpers
     final user = User.fromMap(userMap);
-    
-    // Using Future.microtask to avoid build-time navigation
-    Future.microtask(() {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
-      );
+    //print('User role after login: \\${user.role}'); // Debug print
+    final role = user.role?.toLowerCase().replaceAll(' ', '');
+
+    // Decide which main screen to show based on role
+    Widget destination;
+    if (role == 'admin' ||
+        role == 'programdirector' ||
+        role == 'execcommittee') {
+      destination = MainScreen(user: user); // Admin/Exec/Director
+    } else if (role == 'member') {
+      destination = MainScreen(user: user); // Member
+    } else {
+      destination = MainScreen(user: user); // Participant or fallback
+    }
+
+    // Use addPostFrameCallback to avoid navigation during build and guard context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (context) => destination));
+      }
     });
-    
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+
+    // Show loading indicator while navigating
+    // TODO: Handle this more gracefully in UI
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

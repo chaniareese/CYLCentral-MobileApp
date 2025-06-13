@@ -1,4 +1,6 @@
+// User model representing a user profile and role in the app.
 class User {
+  // User fields (most are nullable for flexibility with backend data)
   final int id;
   final String firstName;
   final String lastName;
@@ -11,8 +13,9 @@ class User {
   final String? province;
   final String? role;
   final String? createdAt;
-  final String? profilePicture;  // Added profile_picture field
+  final String? profilePicture;
 
+  // Constructor for User
   User({
     required this.id,
     required this.firstName,
@@ -26,10 +29,10 @@ class User {
     this.province,
     this.role,
     this.createdAt,
-    this.profilePicture,  // Added profile_picture parameter
+    this.profilePicture, // Added profile_picture parameter
   });
 
-  // Create a User from a Map (JSON)
+  // Factory: Create a User from a Map (e.g., from JSON)
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'] ?? 0,
@@ -44,11 +47,11 @@ class User {
       province: map['province'],
       role: map['role'],
       createdAt: map['created_at'],
-      profilePicture: map['profile_picture'],  // Added mapping for profile_picture
+      profilePicture: map['profile_picture'],
     );
   }
 
-  // Convert User to a Map
+  // Convert User to a Map (e.g., for sending to backend)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -63,7 +66,21 @@ class User {
       'province': province,
       'role': role,
       'created_at': createdAt,
-      'profile_picture': profilePicture,  // Added profile_picture to map
+      'profile_picture': profilePicture,
     };
   }
+
+  // Role helpers for easy role-based UI logic
+  bool get isAdmin {
+    final r = role?.toLowerCase().replaceAll(' ', '');
+    return r == 'admin' || r == 'programdirector' || r == 'executivecommittee';
+  }
+
+  bool get isExecCommittee =>
+      role?.toLowerCase().replaceAll(' ', '') == 'executivecommittee';
+  bool get isProgramDirector =>
+      role?.toLowerCase().replaceAll(' ', '') == 'programdirector';
+  bool get isMember => role?.toLowerCase().replaceAll(' ', '') == 'member';
+  bool get isParticipant =>
+      role?.toLowerCase().replaceAll(' ', '') == 'participant';
 }

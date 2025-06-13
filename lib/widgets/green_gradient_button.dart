@@ -40,7 +40,7 @@ class GreenGradientButton extends StatelessWidget {
                 padding ??
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             decoration: BoxDecoration(
-              gradient: kGreenGradient,
+              gradient: kGreenGradient1,
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             child: Row(
