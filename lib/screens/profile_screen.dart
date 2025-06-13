@@ -163,6 +163,11 @@ class ProfileScreen extends StatelessWidget {
                     'Joined',
                     currentUser.createdAt?.split(' ')[0] ?? 'Recently',
                   ),
+                  const Divider(),
+
+                  // Show user role for debugging/clarity
+                  _buildInfoRow('Role', currentUser.role ?? 'Unknown'),
+                  const Divider(),
                 ],
               ),
             ),
