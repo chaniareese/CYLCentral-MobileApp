@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../constants.dart';
+import '../../constants.dart';
 
 //============================================================================
 // MODEL - Data Structure
@@ -177,22 +177,43 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Positioned(
               bottom: 20,
               right: 20,
-              child: GreenGradientButton(
-                // Show "Get Started" on last intro page, "Next" on others
-                text: _currentIndex == 2 ? 'Get Started' : 'Next',
-                onPressed: () {
-                  _nextPage();
-                  _startOrResetAutoScrollTimer();
-                },
-                width: 120,
-                height: 40,
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: kWhite,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: kGreenGradient1,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                icon: _currentIndex == 2 ? null : Icons.arrow_forward,
-                iconSize: 16,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 32,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    if (_currentIndex < 2) {
+                      _nextPage();
+                      _startOrResetAutoScrollTimer();
+                    } else if (_currentIndex == 2) {
+                      // On last intro page, go to welcome
+                      _nextPage();
+                    }
+                  },
+                  child: Text(
+                    _currentIndex == 2 ? 'Get Started' : 'Next',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: kWhite,
+                    ),
+                  ),
+                ),
               ),
             ),
         ],

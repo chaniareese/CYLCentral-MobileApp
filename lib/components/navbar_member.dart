@@ -18,10 +18,6 @@ class BottomNavBarMember extends StatelessWidget {
         onTap: onTap,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
           BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'My Events'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],

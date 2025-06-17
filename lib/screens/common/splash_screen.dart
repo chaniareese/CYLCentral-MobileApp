@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     )..forward(); // Start animation immediately
-
     _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _startNavigationTimer(); // Begin 5-second countdown
   }
@@ -43,7 +42,6 @@ class _SplashScreenState extends State<SplashScreen>
     final prefs = await SharedPreferences.getInstance();
     final hasCompletedOnboarding =
         prefs.getBool('hasCompletedOnboarding') ?? false;
-    final userRole = prefs.getString('user_role');
     Timer(const Duration(seconds: 5), () {
       if (mounted) {
         // Safety check to prevent navigation on disposed widget
@@ -69,12 +67,12 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kMint, // Custom mint green background
+      backgroundColor: kMint,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Image.asset(
-            'assets/images/logo.gif', // Animated logo asset
+            'assets/images/logo.gif',
             width: 200,
             height: 200,
             fit: BoxFit.contain,

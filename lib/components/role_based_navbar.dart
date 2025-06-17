@@ -3,7 +3,7 @@ import '/constants.dart';
 
 // RoleBasedBottomNavBar: Shows navigation bar items based on the user's role.
 // Admin/Exec/Director: Home, QR Scanner, Profile
-// Member/Participant: Home, My Events, Notifications, Profile
+// Member/Participant: Home, My Events, Profile
 
 class RoleBasedBottomNavBar extends StatefulWidget {
   final int currentIndex; // Currently selected tab index
@@ -57,7 +57,7 @@ class _RoleBasedBottomNavBarState extends State<RoleBasedBottomNavBar> {
 
   // Returns the list of navigation items based on user role
   // Admin/Exec/Director: Home, QR Scanner, Profile
-  // Member/Participant: Home, My Events, Notifications, Profile
+  // Member/Participant: Home, My Events, Profile
   List<Widget> _getNavItems() {
     // Check for admin-like roles (case-sensitive, can be improved for normalization)
     final isAdmin =
@@ -76,8 +76,7 @@ class _RoleBasedBottomNavBarState extends State<RoleBasedBottomNavBar> {
       return [
         _buildNavItem(0, 'assets/icons/home.png', 'Home'),
         _buildNavItem(1, 'assets/icons/folder.png', 'My Events'),
-        _buildNavItem(2, Icons.notifications, 'Notifications', isIcon: true),
-        _buildNavItem(3, 'assets/icons/profile.png', 'Profile'),
+        _buildNavItem(2, 'assets/icons/profile.png', 'Profile'),
       ];
     }
   }
