@@ -3,16 +3,16 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/program_provider.dart'; // Add this import
 import 'providers/event_provider.dart'; // Add this import for EventProvider
-import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/splash_screen.dart';
-import 'screens/onboarding_screen.dart';
-// import 'screens/get_started_screen.dart';
-import 'screens/main_screen.dart';
-import 'screens/profile_screen.dart';
+import 'providers/notification_provider.dart'; // Add this import for NotificationProvider
+import 'screens/common/login_screen.dart';
+import 'screens/common/register_screen.dart';
+import 'screens/common/home_screen.dart';
+import 'screens/common/splash_screen.dart';
+import 'screens/common/onboarding_screen.dart';
+import 'screens/common/main_screen.dart';
+import 'screens/common/profile_screen.dart';
 // import 'screens/explore_screen.dart'; // Make sure to import explore_screen.dart
-// import 'screens/my_events_screen.dart'; // Make sure to import my_events_screen.dart
+// import 'screens/member/my_events_screen.dart'; // Make sure to import my_events_screen.dart
 import 'data/models/user_model.dart';
 
 void main() {
@@ -29,9 +29,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProgramProvider()),
         ChangeNotifierProvider(create: (_) => EventProvider()), // Add this line
+        ChangeNotifierProvider(create: (_) => NotificationProvider()), // Add this line
       ],
       child: MaterialApp(
-        title: 'CYL Central',
+        debugShowCheckedModeBanner: false,
+        title: 'CYLCentral',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           useMaterial3: true,

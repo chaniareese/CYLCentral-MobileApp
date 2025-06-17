@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../providers/auth_provider.dart';
-import '../constants.dart';
+import '/providers/auth_provider.dart';
+import '/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -199,10 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Logo
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Image.asset(
-                  'assets/images/logo_name.png',
-                  height: 50,
-                ),
+                child: Image.asset('assets/images/logo_name.png', height: 50),
               ),
               const SizedBox(height: 10),
               Text(

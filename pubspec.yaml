@@ -33,6 +33,7 @@ dependencies:
   badges: ^3.1.2
   cupertino_icons: ^1.0.8
   carousel_slider: ^5.0.0
+  image_picker: ^1.1.2
 
 #------------- Development Dependencies -------------#
 dev_dependencies:
@@ -62,6 +63,10 @@ flutter:
     - assets/images/onboarding/onboarding3.gif
     - assets/images/onboarding/onboarding_bg.png
     - assets/images/onboarding/welcome_bg.png
+    - assets/images/banner1.png
+    - assets/images/banner2.png
+    - assets/images/banner3.png
+    - assets/images/banner4.png
     - assets/icons/
     - assets/fonts/
 
